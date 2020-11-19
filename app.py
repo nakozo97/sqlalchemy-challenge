@@ -116,11 +116,10 @@ def tobs():
 def start(): 
     print("Server received request for '/api/v1.0/start' page...")
 
-    start_date= dt.date(2017,8,13)
+    start_date = dt.date(2017,8,23)
 
     start_only = Session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
-        filter(measurement.date >= start_date).\
-        group_by(measurement.date).all()
+        filter(measurement.date >= start_date).all()
     
     start_only_list = list(np.ravel(start_only))
     
