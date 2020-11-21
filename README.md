@@ -46,9 +46,9 @@ All of the following inqueries were completed using SQLAlchemy ORM queries, Pand
 
     * 'USC00519281' - Statistics
 
-        lowest_temperature recorded of the most active station 'USC00519281': 54.0
-        highest_temperature recorded of the most active station 'USC00519281': 85.0
-        avg_temperature recorded of the most active station 'USC00519281': 71.663
+            lowest_temperature recorded of the most active station 'USC00519281': 54.0
+            highest_temperature recorded of the most active station 'USC00519281': 85.0
+            avg_temperature recorded of the most active station 'USC00519281': 71.663
 
 * Designed a query to retrieve the last 12 months of temperature observation data (TOBS).
 
@@ -60,7 +60,11 @@ All of the following inqueries were completed using SQLAlchemy ORM queries, Pand
 
 * The Flask Application does all of the following:
 
-    ✓ Correctly generates the engine to the correct sqlite file ✓ Uses ​automap_base()​ and reflects the database schema ✓ Correctly saves references to the tables in the sqlite file (measurement and station). 
+    ✓ Correctly generates the engine to the correct sqlite file 
+    
+    ✓ Uses ​automap_base()​ and reflects the database schema 
+    
+    ✓ Correctly saves references to the tables in the sqlite file (measurement and station). 
     
     ✓ Correctly creates and binds the session between the python app and database. 
 
