@@ -8,10 +8,11 @@ import datetime as dt
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session, Query, create_session
-from sqlalchemy import create_engine, func, inspect
+from sqlalchemy import create_engine, func, inspect, desc
+
 
 # 2. import Flask
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 #################################################
 # 3. Database Setup
@@ -54,9 +55,9 @@ def home():
 
          f"/api/v1.0/tobs<br/>"
 
-         f"/api/v1.0/start<br/>"
+         f"/api/v1.0/&ltstart&gt<br/>"
         
-         f"/api/v1.0/start/end<br/>"
+         f"/api/v1.0/&ltstart&gt/&ltend&gt<br/>"
 
     )
 
@@ -111,38 +112,34 @@ def tobs():
     return jsonify(most_active_station)
 
 # When given the start only, calculate TMIN, TAVG, and TMAX for all dates greater than and equal to the start date.
+# Dynamic URL
 
-@app.route("/api/v1.0/start")
-def start(): 
+@app.route("/api/v1.0/<start>")
+def start_only(start): 
     print("Server received request for '/api/v1.0/start' page...")
 
-    start_date = dt.date(2017,8,23)
+    tobs_results = Session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+        filter(measurement.date >= start).all()
 
-    start_only = Session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
-        filter(measurement.date >= start_date).all()
-    
-    start_only_list = list(np.ravel(start_only))
-    
-    return jsonify(start_only_list)
+    tobs_results_list = list(np.ravel(tobs_results))
+
+    return jsonify(tobs_results_list)
     
 # When given the start and the end date, calculate the TMIN, TAVG, and TMAX 
 # for dates between the start and end date inclusive.
+# Dynamic URL
 
-# @app.route("/api/v1.0/start/end")
-# def startend(): 
-#     print("Server received request for '/api/v1.0/start/end' page...")
+@app.route("/api/v1.0/<start>/<end>")
+def start_end(start,end): 
+    print("Server received request for '/api/v1.0/<start>/<end>' page...")
 
-#     start_date= dt.date(2017,8,13)
-#     end_date = dt.date(2017,8,23)
+    multi_tobs_results = Session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
+        filter(measurement.date >= start).\
+        filter(measurement.date <= end).all()
 
-#     vacation = Session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs)).\
-#         filter(measurement.date >= start_date).\
-#         filter(measurement.date <= end_date).all()
-    
-#     start_only = list(np.ravel(vacation))
-    
-#     return jsonify(start_only)
-    
+    multi_tobs_results_list = list(np.ravel(multi_tobs_results))
+
+    return jsonify(multi_tobs_results_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
